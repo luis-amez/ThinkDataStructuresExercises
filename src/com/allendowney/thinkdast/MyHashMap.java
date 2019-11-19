@@ -3,6 +3,7 @@
  */
 package com.allendowney.thinkdast;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -24,7 +25,7 @@ public class MyHashMap<K, V> extends MyBetterMap<K, V> implements Map<K, V> {
     public V put(K key, V value) {
         V oldValue = super.put(key, value);
 
-        //System.out.println("Put " + key + " in " + map + " size now " + map.size());
+        // System.out.println("Put " + key + " in " + map + " size now " + map.size());
 
         // check if the number of elements per map exceeds the threshold
         if (size() > maps.size() * FACTOR) {
@@ -40,7 +41,14 @@ public class MyHashMap<K, V> extends MyBetterMap<K, V> implements Map<K, V> {
      *
      */
     protected void rehash() {
-        // TODO: FILL THIS IN!
+        List<MyLinearMap<K, V>> prevMaps = maps;
+        makeMaps(maps.size() * 2);
+
+        for (MyLinearMap<K, V> map : prevMaps) {
+            for (Map.Entry<K, V> entry : map.getEntries()) {
+                super.put(entry.getKey(), entry.getValue());
+            }
+        }
     }
 
     /**
@@ -48,7 +56,7 @@ public class MyHashMap<K, V> extends MyBetterMap<K, V> implements Map<K, V> {
      */
     public static void main(String[] args) {
         Map<String, Integer> map = new MyHashMap<String, Integer>();
-        for (int i=0; i<10; i++) {
+        for (int i = 0; i < 10; i++) {
             map.put(new Integer(i).toString(), i);
         }
         Integer value = map.get("3");
