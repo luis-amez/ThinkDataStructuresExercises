@@ -126,7 +126,7 @@ public class ListSorter<T> {
      * @return
      */
     public void heapSort(List<T> list, Comparator<T> comparator) {
-        PriorityQueue<T> heap = new PriorityQueue<T>(list.size(), comparator);
+        PriorityQueue<T> heap = new PriorityQueue<>(list.size(), comparator);
         heap.addAll(list);
         list.clear();
         while (!heap.isEmpty()) {
@@ -145,23 +145,20 @@ public class ListSorter<T> {
      * @return
      */
     public List<T> topK(int k, List<T> list, Comparator<T> comparator) {
-        PriorityQueue<T> heap = new PriorityQueue<T>(list.size(), comparator);
-        for (T element: list) {
+        PriorityQueue<T> heap = new PriorityQueue<>(k, comparator);
+        for (T element : list) {
             if (heap.size() < k) {
                 heap.offer(element);
-                continue;
-            }
-            int cmp = comparator.compare(element, heap.peek());
-            if (cmp > 0) {
+            } else if (comparator.compare(element, heap.peek()) > 0) {
                 heap.poll();
                 heap.offer(element);
             }
         }
-        List<T> res = new ArrayList<T>();
+        List<T> topKList = new ArrayList<>();
         while (!heap.isEmpty()) {
-            res.add(heap.poll());
+            topKList.add(heap.poll());
         }
-        return res;
+        return topKList;
     }
 
 
